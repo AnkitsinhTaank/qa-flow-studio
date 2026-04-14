@@ -119,6 +119,23 @@ Protected admin endpoints:
 - Dependencies and build artifacts ignored (`node_modules`, `vendor`, `public/build`)
 - Admin credentials are not prefilled or hardcoded in UI/docs
 
+## Demo Preview
+
+### 1) Public Flow Runner
+Users answer guided questions and receive a terminal outcome, then submit lead details.
+
+![Public Flow Runner](./docs/screenshots/public-flow.png)
+
+### 2) Admin Flow Builder
+Create questionnaires, add questions/options, and map routes visually.
+
+![Admin Flow Builder](./docs/screenshots/admin-builder.png)
+
+### 3) Live Reports Dashboard
+Track sessions, completion status, and view question-answer trails per user.
+
+![Reports Dashboard](./docs/screenshots/reports-dashboard.png)
+
 ## License
 
 MIT
