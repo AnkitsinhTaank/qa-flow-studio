@@ -76,6 +76,7 @@ function AppShell() {
         const data = await api('/auth/logout', 'POST');
         if (data?.csrf_token) setCsrf(data.csrf_token);
         setAuthUser(null);
+        window.location.assign('/login');
     };
 
     if (!authReady) return <div className="loadingScreen">Loading app...</div>;
@@ -126,7 +127,10 @@ function AppShell() {
 }
 
 function RequireAuth({ user, children }) {
-    if (!user || user.role !== 'admin') return <Navigate to="/login" replace />;
+    if (!user || user.role !== 'admin') {
+        const redirectPath = typeof window !== 'undefined' ? window.location.pathname : '/admin';
+        return <Navigate to={`/login?redirect=${encodeURIComponent(redirectPath)}`} replace />;
+    }
     return children;
 }
 
@@ -143,6 +147,9 @@ function LoginPage({ onLogin }) {
             const data = await api('/auth/login', 'POST', form);
             if (data?.csrf_token) setCsrf(data.csrf_token);
             onLogin(data.user);
+            const redirectTarget = new URLSearchParams(window.location.search).get('redirect');
+            const nextPath = redirectTarget && redirectTarget.startsWith('/') ? redirectTarget : '/admin';
+            window.location.assign(nextPath);
         } catch (err) {
             setError(err.message || 'Login failed.');
         } finally {
