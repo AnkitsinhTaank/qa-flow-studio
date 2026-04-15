@@ -148,7 +148,18 @@ function LoginPage({ onLogin }) {
             if (data?.csrf_token) setCsrf(data.csrf_token);
             onLogin(data.user);
             const redirectTarget = new URLSearchParams(window.location.search).get('redirect');
-            const nextPath = redirectTarget && redirectTarget.startsWith('/') ? redirectTarget : '/admin';
+            const allowedRedirects = new Set(['/admin', '/report']);
+            let nextPath = '/admin';
+            if (redirectTarget) {
+                try {
+                    const resolved = new URL(redirectTarget, window.location.origin);
+                    if (resolved.origin === window.location.origin && allowedRedirects.has(resolved.pathname)) {
+                        nextPath = `${resolved.pathname}${resolved.search}${resolved.hash}`;
+                    }
+                } catch {
+                    nextPath = '/admin';
+                }
+            }
             window.location.assign(nextPath);
         } catch (err) {
             setError(err.message || 'Login failed.');
